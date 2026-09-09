@@ -1,0 +1,56 @@
+# Gradle
+.gradle/
+build/
+.gradle.caches/
+
+# Android
+*.apk
+*.ap_
+*.aab
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration
+local.properties
+
+# External native build
+.obj/
+.so/
+
+# Files in source tree
+*.class
+*.dex
+
+# Kotlin
+.kotlin/
+
+# IDE
+*.iml
+.idea/codeStyles/
+.idea/shelf/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/vcs.xml
+.idea/jsdt/
+.idea/shelf/
+.idea/dataSources/
+.idea/dataSources.local.xml
+.idea/dataSources.xml
+.idea/dataSources_*.xml
+.idea/sqlDataSources.xml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Captures
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Logs
+*.log
+
+# Fastlane
+fastlane/report.xml
+fastlane/test_output/
