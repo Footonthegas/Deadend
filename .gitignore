@@ -38,6 +38,7 @@ local.properties
 .idea/dataSources.xml
 .idea/dataSources_*.xml
 .idea/sqlDataSources.xml
+.idea/inspectionProfiles/
 
 # OS
 .DS_Store

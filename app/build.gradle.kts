@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -18,6 +19,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // TODO: confirm with backend team — backend host/port defined in this single config field
+        buildConfigField("String", "BACKEND_BASE_URL", "\"http://10.0.2.2:3000/\"")
         
         ndk {
             abiFilters.add("arm64-v8a")
@@ -39,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -75,6 +80,18 @@ dependencies {
     
     // Maps
     implementation(libs.osmdroid.android)
+    
+    // Networking (used only for Nominatim geocoding in the location search bar)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+
+    // Backend connectivity — Retrofit REST client
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization)
+    implementation(libs.kotlinx.serialization.json)
+
+    // Real-time event stream — Socket.IO client
+    implementation(libs.socket.io.client)
     
     // ONNX
     implementation(libs.onnxruntime.android)

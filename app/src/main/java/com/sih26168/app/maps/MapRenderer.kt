@@ -22,7 +22,8 @@ fun MapRenderer(
     latitude: Double?,
     longitude: Double?,
     headingDeg: Double?,
-    initialZoom: Double = 16.0
+    initialZoom: Double = 16.0,
+    onMapViewReady: (MapView) -> Unit = {}
 ) {
     val context = LocalContext.current
     var mapView: MapView? by remember { mutableStateOf(null) }
@@ -50,6 +51,7 @@ fun MapRenderer(
     DisposableEffect(Unit) {
         mapView = mapViewRef
         mapViewRef.onResume()
+        onMapViewReady(mapViewRef)
         onDispose {
             mapViewRef.onPause()
             mapViewRef.onDetach()

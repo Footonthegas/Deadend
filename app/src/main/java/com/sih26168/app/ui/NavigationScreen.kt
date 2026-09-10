@@ -7,6 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.sih26168.app.gnss.GnssStatus
 import com.sih26168.app.gnss.CompassSpinStage
 import com.sih26168.app.maps.MapRenderer
+import com.sih26168.app.search.LocationSearchBar
 import com.sih26168.app.ui.components.*
 import com.sih26168.app.ui.theme.BackgroundDark
 import com.sih26168.app.ui.theme.PrimaryAccent
@@ -21,17 +25,22 @@ import com.sih26168.app.ui.theme.SecondaryText
 import com.sih26168.app.ui.theme.SurfaceDark
 import com.sih26168.app.ui.theme.Typography
 import com.sih26168.app.viewmodel.NavigationViewModel
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
 
 @Composable
 fun NavigationScreen(viewModel: NavigationViewModel) {
     val uiState by viewModel.uiState.collectAsState()
+
+    var mapView: MapView? by remember { mutableStateOf(null) }
 
     Box(modifier = Modifier.fillMaxSize().background(BackgroundDark)) {
         MapRenderer(
             modifier = Modifier.fillMaxSize(),
             latitude = uiState.latitude,
             longitude = uiState.longitude,
-            headingDeg = uiState.headingDeg
+            headingDeg = uiState.headingDeg,
+            onMapViewReady = { mapView = it }
         )
 
         if (uiState.compassSpinStage != CompassSpinStage.DONE) {
@@ -50,19 +59,30 @@ fun NavigationScreen(viewModel: NavigationViewModel) {
                     locationServiceEnabled = uiState.locationServiceEnabled
                 )
             }
-        } else {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .padding(safeDrawingPadding())
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-            ) {
+        }
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .padding(safeDrawingPadding())
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+        ) {
+            if (uiState.compassSpinStage == CompassSpinStage.DONE) {
                 StatusPanel(
                     gnssStatus = uiState.gnssStatus,
                     mode = uiState.navigationMode
                 )
+                Spacer(Modifier.height(8.dp))
             }
+LocationSearchBar(
+                modifier = Modifier.fillMaxWidth(),
+               mapView =mapView,
+                currentLocation = uiState.latitude?.let { lat ->
+                    uiState.longitude?.let { lon -> GeoPoint(lat, lon) }
+                },
+                speedMps = uiState.speedMps ?: 0.0
+            )
         }
 
         Column(
